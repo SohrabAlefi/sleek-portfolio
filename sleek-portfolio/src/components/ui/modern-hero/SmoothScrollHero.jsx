@@ -1,18 +1,15 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { ReactLenis } from 'lenis/dist/lenis-react'
-import { motion, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
-import { SiSpacex } from 'react-icons/si'
+import { motion } from 'framer-motion'
 import { FiArrowRight } from 'react-icons/fi'
-
-const SECTION_HEIGHT = 1500
 
 export const SmoothScrollHero = () => {
   return (
-    <div className="bg-zinc-950 text-white">
+    <div className="bg-gradient-to-b from-stone-900 via-neutral-900 to-black text-white">
       <ReactLenis>
         <Nav />
         <Hero />
-        <Schedule />
+        <Featured />
       </ReactLenis>
     </div>
   )
@@ -20,86 +17,88 @@ export const SmoothScrollHero = () => {
 
 const Nav = () => {
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-6 py-3 text-white">
-      <SiSpacex className="text-3xl mix-blend-difference" />
-      <button
-        onClick={() => {
-          document.getElementById('launch-schedule')?.scrollIntoView({ behavior: 'smooth' })
-        }}
-        className="flex items-center gap-1 text-xs text-zinc-400"
-      >
-        LAUNCH SCHEDULE
-        <FiArrowRight />
-      </button>
+    <nav className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-6 py-3">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-lg font-semibold">SA</div>
+        <span className="text-sm text-zinc-300">Sohrab Ansari</span>
+      </div>
+      <div className="flex items-center gap-4">
+        <a href="#work" className="text-sm text-zinc-300 hover:text-white">Work</a>
+        <a href="#about" className="text-sm text-zinc-300 hover:text-white">About</a>
+        <a
+          onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+          className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer hover:text-white"
+        >
+          Get in touch
+          <FiArrowRight />
+        </a>
+      </div>
     </nav>
   )
 }
 
 const Hero = () => {
   return (
-    <div style={{ height: `calc(${SECTION_HEIGHT}px + 100vh)` }} className="relative w-full">
-      <CenterImage />
-      <ParallaxImages />
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-b from-zinc-950/0 to-zinc-950" />
-    </div>
-  )
-}
+    <section className="min-h-screen flex items-center">
+      <div className="max-w-6xl mx-auto px-6 py-28 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <motion.div initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.05 }}>
+            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">Hi, I’m Sohrab — Product Designer & Frontend Engineer</h1>
+            <p className="mt-4 text-lg text-zinc-300 max-w-xl">
+              I design and build delightful interfaces with a focus on motion, accessibility and performance. I ship production-ready frontend code and craft design systems that scale.
+            </p>
 
-const CenterImage = () => {
-  const { scrollY } = useScroll()
-  const clip1 = useTransform(scrollY, [0, 1500], [25, 0])
-  const clip2 = useTransform(scrollY, [0, 1500], [75, 100])
-  const clipPath = useMotionTemplate`polygon(${clip1}% ${clip1}%, ${clip2}% ${clip1}%, ${clip2}% ${clip2}%, ${clip1}% ${clip2}%)`
-  const backgroundSize = useTransform(scrollY, [0, SECTION_HEIGHT + 500], ['170%', '100%'])
-  const opacity = useTransform(scrollY, [SECTION_HEIGHT, SECTION_HEIGHT + 500], [1, 0])
+            <div className="mt-8 flex gap-4 items-center">
+              <a className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full shadow hover:scale-105 transform transition" href="#contact">Hire me</a>
+              <a className="inline-flex items-center gap-3 px-6 py-3 border border-zinc-700 rounded-full hover:bg-white/5 transition" href="#work">View work</a>
+            </div>
 
-  return (
-    <motion.div
-      className="sticky top-0 h-screen w-full bg-center bg-no-repeat"
-      style={{ clipPath, backgroundSize, opacity, backgroundImage: `url(https://images.unsplash.com/photo-1460186136353-977e9d6085a1?q=80&w=2670&auto=format&fit=crop)` }}
-    />
-  )
-}
+            <div className="mt-6 text-sm text-zinc-400">
+              Available for freelance & full-time. Based in Pakistan (UTC+5).
+            </div>
+          </motion.div>
 
-const ParallaxImages = () => {
-  return (
-    <div className="mx-auto max-w-5xl px-4 pt-[200px]">
-      <ParallaxImg src="https://images.unsplash.com/photo-1484600899469-230e8d1d59c0?q=80&w=2670&auto=format&fit=crop" alt="space" start={-200} end={200} className="w-1/3" />
-      <ParallaxImg src="https://images.unsplash.com/photo-1446776709462-d6b525c57bd3?q=80&w=2670&auto=format&fit=crop" alt="launch" start={200} end={-250} className="mx-auto w-2/3" />
-      <ParallaxImg src="https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?q=80&w=2370&auto=format&fit=crop" alt="sat" start={-200} end={200} className="ml-auto w-1/3" />
-      <ParallaxImg src="https://images.unsplash.com/photo-1494022299300-899b96e49893?q=80&w=2670&auto=format&fit=crop" alt="orbit" start={0} end={-500} className="ml-24 w-5/12" />
-    </div>
-  )
-}
-
-const ParallaxImg = ({ className, alt, src, start = -200, end = 200 }) => {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: [`${start}px end`, `end ${end * -1}px`] })
-  const opacity = useTransform(scrollYProgress, [0.75, 1], [1, 0])
-  const scale = useTransform(scrollYProgress, [0.75, 1], [1, 0.85])
-  const y = useTransform(scrollYProgress, [0, 1], [start, end])
-  const transform = useMotionTemplate`translateY(${y}px) scale(${scale})`
-
-  return (
-    <motion.div ref={ref} style={{ opacity, transform }} className={`${className} inline-block p-2`}>
-      <img src={src} alt={alt} className="rounded-lg shadow-lg w-full h-auto object-cover" />
-    </motion.div>
-  )
-}
-
-const Schedule = () => {
-  return (
-    <section id="launch-schedule" className="py-24">
-      <div className="max-w-4xl mx-auto px-6 text-slate-200">
-        <h2 className="text-3xl font-bold mb-6">Launch Schedule</h2>
-        <div className="space-y-4">
-          <div className="p-4 bg-slate-800/60 rounded">June 2026 — Project Alpha</div>
-          <div className="p-4 bg-slate-800/60 rounded">August 2026 — Studio Release</div>
-          <div className="p-4 bg-slate-800/60 rounded">December 2026 — Open Source Toolkit</div>
+          <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative">
+            <div className="w-full rounded-2xl bg-gradient-to-tr from-zinc-800 to-neutral-900 p-6 shadow-lg">
+              <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop" alt="work preview" className="rounded-lg w-full h-64 object-cover" />
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop" alt="thumb" className="rounded-md h-20 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=800&auto=format&fit=crop" alt="thumb" className="rounded-md h-20 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop" alt="thumb" className="rounded-md h-20 w-full object-cover" />
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   )
 }
+
+const Featured = () => {
+  return (
+    <section id="work" className="py-24">
+      <div className="max-w-6xl mx-auto px-6 text-slate-200">
+        <h2 className="text-3xl font-bold mb-6">Selected Projects</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <ProjectCard title="Portfolio Revamp" desc="Design + Frontend" img="https://images.unsplash.com/photo-1512446816093-0a3f8f7e2d6b?q=80&w=1200&auto=format&fit=crop" />
+          <ProjectCard title="Design System" desc="Component library & tokens" img="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop" />
+          <ProjectCard title="Motion Experiments" desc="Micro-interactions & transitions" img="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const ProjectCard = ({ title, desc, img }) => (
+  <a className="block group" href="#contact">
+    <div className="rounded-xl overflow-hidden bg-zinc-800/50 p-0 shadow hover:shadow-lg transition">
+      <img src={img} alt={title} className="w-full h-40 object-cover group-hover:scale-105 transition-transform" />
+      <div className="p-4">
+        <h3 className="font-semibold">{title}</h3>
+        <p className="mt-1 text-sm text-zinc-400">{desc}</p>
+      </div>
+    </div>
+  </a>
+)
 
 export default SmoothScrollHero
