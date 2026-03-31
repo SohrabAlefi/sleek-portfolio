@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "sleek-portfolio/package.json", "use": "@vercel/next" }
-  ],
-  "framework": { "name": "nextjs" }
+  "buildCommand": "cd sleek-portfolio && npm install && npm run build",
+  "installCommand": "cd sleek-portfolio && npm install",
+  "outputDirectory": "sleek-portfolio/.next"
 }
