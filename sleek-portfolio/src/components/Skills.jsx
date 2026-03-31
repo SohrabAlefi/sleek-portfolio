@@ -28,3 +28,5 @@ export default function Skills(){
         </div>
       </div>
     </section>
+  )
+}
